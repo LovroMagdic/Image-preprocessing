@@ -11,22 +11,22 @@ def grayscale(image):
 arr = [] # sadrzi imena svih dataset slika
 
 
-dir = "C:/Users/Lovro/Desktop/projekt R/ocr_preprocessing/projektR/dataset"
+dir = "C:/Users/Lovro/Desktop/projekt/ProjektR/dataset"
 for filename in os.scandir(dir):
-    if filename.is_file() and str(filename.name).endswith(".jpg"):
-        arr.append(filename.name)
+    if filename.is_file():
+        arr.append(filename.path)
 
 print(arr)
-
 for each in arr:
+    
+    
     #1
-    '''
     image = cv2.imread(each, flags=cv2.IMREAD_COLOR)
     kernel = np.array([[0, -1, 0],
                     [-1, 5,-1],
                     [0, -1, 0]])
     image_sharp = cv2.filter2D(src=image, ddepth=-1, kernel=kernel)
-    cv2.imshow('AV CV- Winter Wonder Sharpened', image_sharp)
+    each = each.replace("dataset", "dataset_processed" )
     cv2.imwrite(each, image_sharp)
 
     #2
@@ -35,14 +35,9 @@ for each in arr:
     #image brightness enhancer
     enhancer = ImageEnhance.Contrast(im)
 
-    #ovo treba maknut
-    factor = 0.5 #decrease constrast
-    im_output = enhancer.enhance(factor)
-    im_output.save('less-contrast-image.jpg')
-
     factor = 1.5 #increase contrast
     im_output = enhancer.enhance(factor)
-    im_output.save(each)'''
+    im_output.save(each)
 
     #3
     image_file = each
