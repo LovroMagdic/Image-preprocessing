@@ -1,17 +1,21 @@
 import cv2 
 import pytesseract
 import os
-from matplotlib import pyplot as plt
 import numpy as np
+
 from PIL import Image, ImageEnhance
+from pathlib import Path
+from matplotlib import pyplot as plt
 
 def grayscale(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
+home = str(Path.home())
+dir = os.path.join(home, "Desktop", "projekt", "ProjektR", "dataset")
+dir = dir.replace("\\", "/")
+
 arr = [] # sadrzi imena svih dataset slika
-
-
-dir = "C:/Users/Lovro/Desktop/projekt/ProjektR/dataset"
+#dir = "C:/Users/Lovro/Desktop/projekt/ProjektR/dataset"
 for filename in os.scandir(dir):
     if filename.is_file():
         arr.append(filename.path)
