@@ -12,3 +12,4 @@
 <br />
 14.11.22<br />
 -dodana deskew.py funkcija koja se koristi da korekciju kuta slike<br />
+-postavljen route izmedu dataset foldera i deskew.py, slike se uspjesno ucitavaju i spremaju i odgovarajuce foldere<br />
