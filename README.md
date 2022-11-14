@@ -9,3 +9,6 @@
 -dodan folder za procesirane slike<br />
 -popravljen link izmedu test.py i dataset foldera<br />
 -modificiran path da radi da svakog usera koji klonira repo<br />
+<br />
+14.11.22<br />
+-dodana deskew.py funkcija koja se koristi da korekciju kuta slike<br />
