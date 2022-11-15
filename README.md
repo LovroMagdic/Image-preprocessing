@@ -1,6 +1,6 @@
 # ProjektR
 
-##How to run<br />
+How to run<br />
 <br />
 This program is written in python3 and you will need this packages to run it:<br />
 ```
