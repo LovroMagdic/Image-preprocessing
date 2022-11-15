@@ -10,8 +10,9 @@ from matplotlib import pyplot as plt
 def grayscale(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
+#C:\Users\Lovro\Desktop\projekt\ProjektR\dataset_processed
 home = str(Path.home())
-dir = os.path.join(home, "Desktop", "projekt", "ProjektR", "dataset")
+dir = os.path.join(home, "Desktop", "projekt", "projektR","dataset_deskewed")
 dir = dir.replace("\\", "/")
 
 arr = [] # sadrzi imena svih dataset slika
@@ -20,17 +21,15 @@ for filename in os.scandir(dir):
     if filename.is_file():
         arr.append(filename.path)
 
-print(arr)
 for each in arr:
-    
-    
+
     #1
     image = cv2.imread(each, flags=cv2.IMREAD_COLOR)
     kernel = np.array([[0, -1, 0],
                     [-1, 5,-1],
                     [0, -1, 0]])
     image_sharp = cv2.filter2D(src=image, ddepth=-1, kernel=kernel)
-    each = each.replace("dataset", "dataset_processed" )
+    each = each.replace("dataset_deskewed", "dataset_processed" )
     cv2.imwrite(each, image_sharp)
 
     #2
