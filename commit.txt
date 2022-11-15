@@ -1,0 +1,19 @@
+# ProjektR
+
+3.11.2022
+-dodan trenutni dataset, podlozno promjeni
+-proveden prvi OCR ne daje ocekivane rezultate, problem se pojavljuje kod slike sa blijedim tekstom
+-na dodanim slikama proveden samo threshold, iako sharpen i promjena kontrasta za neke slike daju bolje rezultate
+
+4.11.22
+-dodan folder za procesirane slike
+-popravljen route izmedu test.py i dataset foldera
+-modificiran path da radi za svakog usera koji klonira repo
+
+14.11.22
+-dodana deskew.py funkcija koja se koristi kod korekcije kuta slike
+-postavljen route izmedu dataset foldera i deskew.py, slike se uspjesno ucitavaju i spremaju u odgovarajuce foldere
+
+15.11.22
+-dodan remove-bg.py, funckija za izbacivanje crnih pozadina iz slika
+-popravljen route izmedu foldera, i dodan folder dataset_nobg za slike bez crne pozadine
