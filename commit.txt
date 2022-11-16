@@ -17,3 +17,7 @@
 15.11.22
 -dodan remove-bg.py, funckija za izbacivanje crnih pozadina iz slika
 -popravljen route izmedu foldera, i dodan folder dataset_nobg za slike bez crne pozadine
+
+16.11.12
+-dodan adaptive_thres.py, funckija za adaptivno odredivanje thresholda
+-dodan folder za slike koja su prosle kroz adaptive_thres.py
