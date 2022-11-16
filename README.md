@@ -1,7 +1,8 @@
 # ProjektR
 
-<br />
+### How to run:
 This program is written for python3 and needs these packages to run:<br />
+
 ```
 python3 -m pip install --upgrade Pillow
 
