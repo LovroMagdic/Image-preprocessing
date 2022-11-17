@@ -21,3 +21,6 @@
 16.11.12
 -dodan adaptive_thres.py, funckija za adaptivno odredivanje thresholda
 -dodan folder za slike koja su prosle kroz adaptive_thres.py
+
+17.11.12
+-slike provedene kroz adaptive threshold routane su u deskew.py i spremljene u datoteci dataset_deskewed
