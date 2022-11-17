@@ -41,8 +41,9 @@ for each in arr:
 #pronalaznje linija i rotiranje
 #real_img ona koja ustvari rotiram, img je slika za pronalaznje linija
 for each in arr:
+    each = each.replace("dataset", "dataset_adaptive_threshold")
     real_img = cv2.imread(each)
-    each=each.replace("dataset", "dataset_processed_deskew")
+    each=each.replace("dataset_adaptive_threshold", "dataset_processed_deskew")
     img = cv2.imread(each)
     arr2 = []
     global_angle = 0
