@@ -18,9 +18,13 @@
 -dodan remove-bg.py, funckija za izbacivanje crnih pozadina iz slika
 -popravljen route izmedu foldera, i dodan folder dataset_nobg za slike bez crne pozadine
 
-16.11.12
+16.11.22
 -dodan adaptive_thres.py, funckija za adaptivno odredivanje thresholda
 -dodan folder za slike koja su prosle kroz adaptive_thres.py
 
-17.11.12
+17.11.22
 -slike provedene kroz adaptive threshold routane su u deskew.py i spremljene u datoteci dataset_deskewed
+
+19.11.22
+-dodan OCR.py, dodan folder za .txt datoteke procitanih slika
+-upostavljen route izmedu dataset_nobg i OCR.py
