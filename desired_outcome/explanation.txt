@@ -1,0 +1,2 @@
+-prikazan rezultat postignut je manualnim rezanjem slike ".dataset_adaptive_threshold/Z05353422.jpg" i provedbom kroz OCR.py
+-ovakav rezultat ocekuje se za sve slike nakon postizanja automatskog izbacivanja disortirane pozadine
