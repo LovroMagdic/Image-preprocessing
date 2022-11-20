@@ -28,3 +28,6 @@
 19.11.22
 -dodan OCR.py, dodan folder za .txt datoteke procitanih slika
 -upostavljen route izmedu dataset_nobg i OCR.py
+
+20.11.22
+-dodani komentari za bolje razumijevanje koda i lakšu ponovnu reprodukciju dobivenih rezultata

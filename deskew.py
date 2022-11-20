@@ -8,6 +8,10 @@ from PIL import Image, ImageEnhance
 from pathlib import Path
 from matplotlib import pyplot as plt
 
+#skripta za korekciju kuta slike, funkc tako da uzmemo originalnu sliku i od nje napravimo
+#sliku sa samo vidljivim papirom bez teksta i crnom pozadinom, tu izracunamo kut svih linija koje pronademo
+#konacni kut korekcije je prosjek svih kuteva 0-10 cca
+
 def rotateImage(cvImage, angle: float):
     newImage = cvImage.copy()
     (h, w) = newImage.shape[:2]
@@ -73,11 +77,12 @@ for each in arr:
         k2 = res1
         angle = math.tan(abs((k2-0)/(1+k2*0)))
         res = math.degrees(math.atan(angle))
+        #uzimanje samo kuteva izmedu 0-10 stup, izbacujemo prevelike kuteve
         if res > 0 and res < 10:
             arr2.append(res)
             global_angle += res
 
-    global_angle = global_angle/len(arr2)
+    global_angle = global_angle/len(arr2) #konacni kut korekcije je prosjek kuteva koje smo uzeli u obzir
     #if "668" in each:
         #cv2.imwrite('test-668.jpg', img)
         #print(global_angle)

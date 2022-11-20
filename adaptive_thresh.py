@@ -7,6 +7,8 @@ from PIL import Image, ImageEnhance
 from pathlib import Path
 from matplotlib import pyplot as plt
 
+#skripta za adaptive threshold, odlicna za slike za izuzetno izbljedenim tekstom
+
 #C:\Users\Lovro\Desktop\projekt\ProjektR\dataset
 home = str(Path.home())
 dir = os.path.join(home, "Desktop", "projekt", "projektR", "dataset")
