@@ -1,13 +1,14 @@
 # ProjektR
 
-### How to run:
-This program is written for python3 and needs these packages to run:<br />
+## This script runs on python3 and need these packages:<br />
+<br />
 
+CV and Pillow for image processing and various reads and writes:
 ```
-python3 -m pip install --upgrade Pillow
-
+pip install --upgrade Pillow
 pip install opencv-python
-
+```
+Python-tesseract is an optical character recognition (OCR) tool for python:
+```
 pip install pytesseract
-
 ```
