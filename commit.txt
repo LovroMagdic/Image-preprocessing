@@ -31,3 +31,6 @@
 
 20.11.22
 -dodani komentari za bolje razumijevanje koda i lakšu ponovnu reprodukciju dobivenih rezultata
+
+21.11.12
+-dodan folder za procitane slike na kojima je proveden adaptive threshold, ne daje dobre rezultate, trebalo bi izbacit pozadinu
