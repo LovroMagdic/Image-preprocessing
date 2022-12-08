@@ -34,3 +34,7 @@
 
 21.11.12
 -dodan folder za procitane slike na kojima je proveden adaptive threshold, ne daje dobre rezultate, trebalo bi izbacit pozadinu
+
+8.12.22
+-dodan contour.py i primjeri na kojima je provedena funkcija
+-radi bolje od ocekivanog, uspjesno crta obrub papira i izbaci okolnu pozadinu
