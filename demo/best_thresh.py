@@ -8,11 +8,11 @@ best_thresh = 0
 ar = []
 arr = []
 
-for i in range(100, 250, 5): # i == best_thresh
-    image = cv2.imread("Z05353422.jpg")
+for i in range(100, 235, 5): # i == best_thresh
+    image = cv2.imread("demo\dataset_final\Z05353401.jpg")
     img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     ret, thresh = cv2.threshold(img_gray, i, 255, cv2.THRESH_BINARY)
-    cv2.imwrite('test-bw.jpg', thresh)
+    #cv2.imwrite('demo/test-bw.jpg', thresh)
 
     contours, hierarchy = cv2.findContours(image=thresh, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
     image_copy = image.copy()
@@ -31,10 +31,10 @@ index = arr.index(min(arr))
 print(ar[index])
 
 i = int(ar[index][2])
-image = cv2.imread("Z05353422.jpg")
+image = cv2.imread("demo\dataset_final\Z05353401.jpg")
 img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 ret, thresh = cv2.threshold(img_gray, i, 255, cv2.THRESH_BINARY)
-cv2.imwrite('test-bw.jpg', thresh)
+cv2.imwrite('demo/dataset-result/Z05353401-bw.jpg', thresh)
 
 contours, hierarchy = cv2.findContours(image=thresh, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
 image_copy = image.copy()
@@ -45,4 +45,4 @@ c = max(contours, key = cv2.contourArea)
 x,y,w,h = cv2.boundingRect(c)
 cv2.rectangle(thresh,(x,y),(x+w,y+h),(0,255,0),5)
 foreground = image[y:y+h,x:x+w]
-cv2.imwrite("test.jpg", foreground)
+cv2.imwrite("demo/dataset-result/Z05353401.jpg", foreground)

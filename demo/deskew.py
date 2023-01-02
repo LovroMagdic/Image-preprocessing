@@ -23,7 +23,7 @@ def rotateImage(cvImage, angle: float):
 def grayscale(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-dir = r"C:\Users\Lovro\Desktop\projektR-isprobavanje\contour\dataset"
+dir = r"C:\Users\Lovro\Desktop\ProjektR\demo\dataset"
 
 
 arr = [] # sadrzi imena svih dataset slika
@@ -88,5 +88,5 @@ for each in arr:
 
     deskew_img = rotateImage(real_img, -1 * global_angle)
 
-    each=each.replace("dataset_processed_deskew", "dataset_deskewed")
+    each=each.replace("dataset_processed_deskew", "dataset_final")
     cv2.imwrite(each, deskew_img)
