@@ -19,9 +19,9 @@ def rotateImage(cvImage, angle: float):
 def grayscale(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-#C:\Users\Lovro\Desktop\folder\dataset
+#C:\Users\Lovro\Desktop\ProjektR\dataset
 home = str(Path.home())
-dir = os.path.join(home, "Desktop", "folder", "dataset")
+dir = os.path.join(home, "Desktop", "ProjektR", "dataset")
 dir = dir.replace("\\", "/")
 
 arr = [] # sadrzi imena svih dataset slika
@@ -43,18 +43,16 @@ for each in arr:
 for each in arr:
 
     image = cv2.imread(each, 0)
-
-    # image = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,25,4)
-    each = each.replace("dataset","dataset_adaptive_threshold")
+    each = each.replace("dataset","dataset_copy")
     cv2.imwrite(each, image)
 
 #pronalaznje linija i rotiranje
 #real_img ona koja ustvari rotiram, img je slika za pronalaznje linija
 for each in arr:
     arr1 = []
-    each = each.replace("dataset", "dataset_adaptive_threshold")
+    each = each.replace("dataset", "dataset_copy")
     real_img = cv2.imread(each)
-    each=each.replace("dataset_adaptive_threshold", "dataset_processed_deskew")
+    each=each.replace("dataset_copy", "dataset_processed_deskew")
     img = cv2.imread(each)
     arr2 = []
     global_angle = 0
