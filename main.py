@@ -2,61 +2,154 @@ import cv2
 import pytesseract
 import os
 import numpy as np
+import math
 
 from PIL import Image, ImageEnhance
 from pathlib import Path
 from matplotlib import pyplot as plt
 
-#prvi pokusaj obrade slike, ne daje dobre rezultate za sve slike, lose obradi slike za izuzetno izblijedenim tekstom
-#adaptive_threshold daje bolje rezultate
+def rotateImage(cvImage, angle: float):
+    newImage = cvImage.copy()
+    (h, w) = newImage.shape[:2]
+    center = (w // 2, h // 2)
+    M = cv2.getRotationMatrix2D(center, angle, 1.0)
+    newImage = cv2.warpAffine(newImage, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    return newImage
 
 def grayscale(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-#C:\Users\Lovro\Desktop\projekt\ProjektR\dataset_processed
+#C:\Users\Lovro\Desktop\folder\dataset
 home = str(Path.home())
-dir = os.path.join(home, "Desktop", "projekt", "projektR","dataset_deskewed")
+dir = os.path.join(home, "Desktop", "folder", "dataset")
 dir = dir.replace("\\", "/")
 
 arr = [] # sadrzi imena svih dataset slika
-#dir = "C:/Users/Lovro/Desktop/projekt/ProjektR/dataset"
+
+
 for filename in os.scandir(dir):
     if filename.is_file():
         arr.append(filename.path)
+#spremljene slike za pronalazenje linija
+for each in arr:
+    tmp_img = cv2.imread(each)
 
-#iteriranje svake slike u folderu
+    gray_image = grayscale(tmp_img)
+    thresh, im_bw = cv2.threshold(gray_image, 100, 255, cv2.THRESH_BINARY)
+    each = each.replace("dataset", "dataset_processed_deskew")
+    cv2.imwrite(each, im_bw)
+
+#spremanje slika za rotiranje i traznje linija
 for each in arr:
 
-    #1 izostravanje slike
-    image = cv2.imread(each, flags=cv2.IMREAD_COLOR)
-    kernel = np.array([[0, -1, 0],
-                    [-1, 5,-1],
-                    [0, -1, 0]])
-    image_sharp = cv2.filter2D(src=image, ddepth=-1, kernel=kernel)
-    each = each.replace("dataset_deskewed", "dataset_processed" )
-    cv2.imwrite(each, image_sharp)
+    image = cv2.imread(each, 0)
 
-    #2 promjena kontrasta slike
-    im = Image.open(each)
-    enhancer = ImageEnhance.Contrast(im)
-    factor = 1.5 #promjenjiv faktor
-    im_output = enhancer.enhance(factor)
-    im_output.save(each)
+    # image = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,25,4)
+    each = each.replace("dataset","dataset_adaptive_threshold")
+    cv2.imwrite(each, image)
 
-    #3 postupak thresholda, potrebno je dobit grayscale pa bw format te provest threshold
-    image_file = each
-    img = cv2.imread(image_file)
+#pronalaznje linija i rotiranje
+#real_img ona koja ustvari rotiram, img je slika za pronalaznje linija
+for each in arr:
+    arr1 = []
+    each = each.replace("dataset", "dataset_adaptive_threshold")
+    real_img = cv2.imread(each)
+    each=each.replace("dataset_adaptive_threshold", "dataset_processed_deskew")
+    img = cv2.imread(each)
+    arr2 = []
+    global_angle = 0
 
-    gray_image = grayscale(img)
-    cv2.imwrite(each, gray_image)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(gray, 50, 150, apertureSize=3)
+    lines = cv2.HoughLines(edges, 1, np.pi/180, 200)
 
-    image_gray = each
-    img = cv2.imread(image_gray)
+    for r_theta in lines:
+        arr1 = np.array(r_theta[0], dtype=np.float64)
+        r, theta = arr1
 
-    inverted_image = cv2.bitwise_not(img)
-    cv2.imwrite(each, inverted_image)
-    image_file = each
-    img = cv2.imread(image_file)
+        a = np.cos(theta)
+        b = np.sin(theta)
+        x0 = a*r
+        y0 = b*r
+        x1 = int(x0 + 1000*(-b))
+        y1 = int(y0 + 1000*(a))
+        x2 = int(x0 - 1000*(-b))
+        y2 = int(y0 - 1000*(a))
 
-    thresh, im_bw = cv2.threshold(gray_image, 230, 240, cv2.THRESH_BINARY) #odabrane 230 i 240 zbog izrazitog izblijedenog teksta na pojedinim slikama
-    cv2.imwrite(each, im_bw)
+        if ((x2-x1) != 0):
+            res1 = (y2-y1)/(x2-x1)
+            res2 = y1-res1*x1
+        cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
+        
+        k2 = res1
+        angle = math.tan(abs((k2-0)/(1+k2*0)))
+        res = math.degrees(math.atan(angle))
+        #uzimanje samo kuteva izmedu 0-10 stup, izbacujemo prevelike kuteve
+        if res > 0 and res < 10:
+            arr2.append(res)
+            global_angle += res
+
+    global_angle = global_angle/len(arr2) #konacni kut korekcije je prosjek kuteva koje smo uzeli u obzir
+    # if "668" in each:
+    #     cv2.imwrite('test-668.jpg', img)
+    #     print(arr2)
+
+    deskew_img = rotateImage(real_img, -1 * global_angle)
+
+    each=each.replace("dataset_processed_deskew", "dataset_deskewed")
+    cv2.imwrite(each, deskew_img)
+
+# pronalazenje najboljeg thresholda
+ar = []
+array = []
+
+for each in arr:
+    each = each.replace("dataset","dataset_deskewed")
+    for i in range(100, 235, 5): # i == best_thresh
+        image = cv2.imread(each)
+        img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        ret, thresh = cv2.threshold(img_gray, i, 255, cv2.THRESH_BINARY)
+        # cv2.imwrite('demo/test-bw.jpg', thresh)
+
+        contours, hierarchy = cv2.findContours(image=thresh, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
+        image_copy = image.copy()
+
+        cv2.drawContours(image=image_copy, contours=contours, contourIdx=-1, color=(0, 255, 0), thickness=2, lineType=cv2.LINE_AA)
+
+        c = max(contours, key = cv2.contourArea)
+        # print(cv2.contourArea(c))
+        x,y,w,h = cv2.boundingRect(c)
+        # print(w*h)
+
+        ar.append([cv2.contourArea(c), w*h, i])
+        array.append(int(w*h)-int(cv2.contourArea(c)))
+
+    index = array.index(min(array))
+    # print(ar[index])
+
+    i = int(ar[index][2])
+    each = each.replace("dataset_deskewed","dataset")
+    image = cv2.imread(each)
+    img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    ret, thresh = cv2.threshold(img_gray, i, 255, cv2.THRESH_BINARY)
+    # cv2.imwrite('demo/dataset-result/Z05353401-bw.jpg', thresh)
+
+    contours, hierarchy = cv2.findContours(image=thresh, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
+    image_copy = image.copy()
+
+    cv2.drawContours(image=image_copy, contours=contours, contourIdx=-1, color=(0, 255, 0), thickness=2, lineType=cv2.LINE_AA)
+
+    c = max(contours, key = cv2.contourArea)
+    x,y,w,h = cv2.boundingRect(c)
+    cv2.rectangle(thresh,(x,y),(x+w,y+h),(0,255,0),5)
+    foreground = image[y:y+h,x:x+w]
+    each = each.replace("dataset", "dataset_contour")
+    cv2.imwrite(each, foreground)
+
+for each in arr:
+    each = each.replace("dataset","dataset_contour")
+    img = cv2.imread(each, 0)
+
+    image = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,25,4)
+    each = each.replace("dataset_contour","dataset_adaptive")
+    cv2.imwrite(each, image)
