@@ -19,6 +19,20 @@ def rotateImage(cvImage, angle: float):
 def grayscale(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
+def thin_font(image):
+    image = cv2.bitwise_not(image)
+    kernel = np.ones((2,2),np.uint8)
+    image = cv2.erode(image, kernel, iterations=1)
+    image = cv2.bitwise_not(image)
+    return (image)
+
+def thick_font(image):
+    image = cv2.bitwise_not(image)
+    kernel = np.ones((2,2),np.uint8)
+    image = cv2.dilate(image, kernel, iterations=1)
+    image = cv2.bitwise_not(image)
+    return (image)
+
 #C:\Users\Lovro\Desktop\ProjektR\dataset
 home = str(Path.home())
 dir = os.path.join(home, "Desktop", "ProjektR", "dataset")
@@ -30,6 +44,7 @@ arr = [] # sadrzi imena svih dataset slika
 for filename in os.scandir(dir):
     if filename.is_file():
         arr.append(filename.path)
+    
 #spremljene slike za pronalazenje linija
 for each in arr:
     tmp_img = cv2.imread(each)
@@ -145,9 +160,26 @@ for each in arr:
     cv2.imwrite(each, foreground)
 
 for each in arr:
-    each = each.replace("dataset","dataset_contour")
+    # thicker font
+    image = cv2.imread(each)
+    dilated_image = thick_font(image)
+    each = each.replace("dataset_contour","dataset_thick")
+    cv2.imwrite(each, dilated_image)
+
+for each in arr:
+    each = each.replace("dataset","dataset_thick")
     img = cv2.imread(each, 0)
 
     image = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,25,4)
-    each = each.replace("dataset_contour","dataset_adaptive")
+    each = each.replace("dataset_thick","dataset_adaptive")
     cv2.imwrite(each, image)
+
+for each in arr:
+
+    # thinner font
+    each = each.replace("dataset","dataset_adaptive")
+    image = cv2.imread(each)
+    eroded_image = thin_font(image)
+    each = each.replace("dataset_adaptive", "dataset_thin")
+    cv2.imwrite(each, eroded_image)
+
