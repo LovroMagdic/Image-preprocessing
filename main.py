@@ -21,7 +21,7 @@ def grayscale(image):
 
 def thin_font(image):
     image = cv2.bitwise_not(image)
-    kernel = np.ones((2,2),np.uint8)
+    kernel = np.ones((2,1),np.uint8)
     image = cv2.erode(image, kernel, iterations=1)
     image = cv2.bitwise_not(image)
     return (image)
@@ -44,7 +44,7 @@ arr = [] # sadrzi imena svih dataset slika
 for filename in os.scandir(dir):
     if filename.is_file():
         arr.append(filename.path)
-    
+
 #spremljene slike za pronalazenje linija
 for each in arr:
     tmp_img = cv2.imread(each)
@@ -97,11 +97,12 @@ for each in arr:
         k2 = res1
         angle = math.tan(abs((k2-0)/(1+k2*0)))
         res = math.degrees(math.atan(angle))
+        
         #uzimanje samo kuteva izmedu 0-10 stup, izbacujemo prevelike kuteve
         if res > 0 and res < 10:
             arr2.append(res)
             global_angle += res
-
+    
     global_angle = global_angle/len(arr2) #konacni kut korekcije je prosjek kuteva koje smo uzeli u obzir
     # if "668" in each:
     #     cv2.imwrite('test-668.jpg', img)
@@ -160,18 +161,31 @@ for each in arr:
     cv2.imwrite(each, foreground)
 
 for each in arr:
+    each = each.replace("dataset", "dataset_contour")
+    image = cv2.imread(each, 0)
+
+    blur = cv2.GaussianBlur(image,(5,5),0)
+    alpha = 1.5
+    beta = (1.0 - alpha)
+    sharp = cv2.addWeighted(image, alpha, blur, beta, 0.0)
+    each = each.replace("dataset_contour", "dataset_blur")
+    cv2.imwrite(each, sharp)
+'''
+for each in arr:
+    each = each.replace("dataset", "dataset_blur")
     # thicker font
     image = cv2.imread(each)
     dilated_image = thick_font(image)
-    each = each.replace("dataset_contour","dataset_thick")
+    each = each.replace("dataset_blur","dataset_thick")
     cv2.imwrite(each, dilated_image)
+'''
 
 for each in arr:
-    each = each.replace("dataset","dataset_thick")
+    each = each.replace("dataset","dataset_blur")
     img = cv2.imread(each, 0)
 
-    image = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,25,4)
-    each = each.replace("dataset_thick","dataset_adaptive")
+    image = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,25,4)
+    each = each.replace("dataset_blur","dataset_adaptive")
     cv2.imwrite(each, image)
 
 for each in arr:
@@ -182,4 +196,15 @@ for each in arr:
     eroded_image = thin_font(image)
     each = each.replace("dataset_adaptive", "dataset_thin")
     cv2.imwrite(each, eroded_image)
+
+for each in arr:
+    each = each.replace("dataset", "dataset_thin")
+    image = cv2.imread(each, 0)
+
+    blur = cv2.GaussianBlur(image,(5,5),0)
+    alpha = 1.5
+    beta = (1.0 - alpha)
+    # sharp = cv2.addWeighted(image, alpha, blur, beta, 0.0)
+    each = each.replace("dataset_thin", "dataset_final")
+    cv2.imwrite(each, blur)
 
