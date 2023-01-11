@@ -11,7 +11,7 @@ from matplotlib import pyplot as plt
 
 #C:\Users\Lovro\Desktop\ProjektR\dataset_processed
 home = str(Path.home())
-dir = os.path.join(home, "Desktop", "projektR","dataset_thin")  #promjeni zadnji argument ovisno iz kojeg foldera zelis citat slike
+dir = os.path.join(home, "Desktop", "projektR","dataset_final")  #promjeni zadnji argument ovisno iz kojeg foldera zelis citat slike
 dir = dir.replace("\\", "/")
 
 arr = []

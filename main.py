@@ -117,6 +117,8 @@ for each in arr:
 ar = []
 array = []
 
+#ovdje je bug ne uzimas deskew-ane slike kasnije, nego ciste iz dataseta
+
 for each in arr:
     each = each.replace("dataset","dataset_deskewed")
     for i in range(100, 235, 5): # i == best_thresh
@@ -129,6 +131,7 @@ for each in arr:
         image_copy = image.copy()
 
         cv2.drawContours(image=image_copy, contours=contours, contourIdx=-1, color=(0, 255, 0), thickness=2, lineType=cv2.LINE_AA)
+        # cv2.imwrite("image-draw.jpg", image_copy)
 
         c = max(contours, key = cv2.contourArea)
         # print(cv2.contourArea(c))
@@ -142,7 +145,7 @@ for each in arr:
     # print(ar[index])
 
     i = int(ar[index][2])
-    each = each.replace("dataset_deskewed","dataset")
+    # each = each.replace("dataset_deskewed","dataset")
     image = cv2.imread(each)
     img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     ret, thresh = cv2.threshold(img_gray, i, 255, cv2.THRESH_BINARY)
@@ -157,7 +160,7 @@ for each in arr:
     x,y,w,h = cv2.boundingRect(c)
     cv2.rectangle(thresh,(x,y),(x+w,y+h),(0,255,0),5)
     foreground = image[y:y+h,x:x+w]
-    each = each.replace("dataset", "dataset_contour")
+    each = each.replace("dataset_deskewed", "dataset_contour")
     cv2.imwrite(each, foreground)
 
 for each in arr:
