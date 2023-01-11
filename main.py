@@ -153,14 +153,19 @@ for each in arr:
 
     contours, hierarchy = cv2.findContours(image=thresh, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
     image_copy = image.copy()
+    c = max(contours, key = cv2.contourArea)
 
+    black_canvas = np.zeros_like(img_gray)
     cv2.drawContours(image=image_copy, contours=contours, contourIdx=-1, color=(0, 255, 0), thickness=2, lineType=cv2.LINE_AA)
+    cv2.drawContours(black_canvas, c, -1, 255, cv2.FILLED) # this gives a binary mask
+    each = each.replace("dataset_deskewed", "dataset_filled")
+    cv2.imwrite(each, black_canvas)
 
     c = max(contours, key = cv2.contourArea)
     x,y,w,h = cv2.boundingRect(c)
     cv2.rectangle(thresh,(x,y),(x+w,y+h),(0,255,0),5)
     foreground = image[y:y+h,x:x+w]
-    each = each.replace("dataset_deskewed", "dataset_contour")
+    each = each.replace("dataset_filled", "dataset_contour")
     cv2.imwrite(each, foreground)
 
 for each in arr:
