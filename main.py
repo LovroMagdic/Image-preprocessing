@@ -33,7 +33,6 @@ def thick_font(image):
     image = cv2.bitwise_not(image)
     return (image)
 
-#C:\Users\Lovro\Desktop\ProjektR\dataset
 home = str(Path.home())
 dir = os.path.join(home, "Desktop", "ProjektR", "dataset")
 dir = dir.replace("\\", "/")

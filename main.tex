@@ -1,0 +1,77 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\begin{document}
+\begin{titlepage}
+	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for horizontal lines, change thickness here
+	
+	\center % Centre everything on the page
+	
+	%------------------------------------------------
+	%	Headings
+	%------------------------------------------------
+	
+	\textsc{\LARGE Fakultet Elektrotehnike i RAčunarstva}\\[1.5cm] % Main heading such as the name of your university/college
+	\vfill
+	\textsc{\Large Projekt R}\\[0.5cm]
+	\textsc{\large Tehnička dokumentacija}\\[0.5cm] % Minor heading such as course title
+	\HRule\\[0.4cm]
+	{\huge\bfseries Sustav za procesiranje dokumenata pisanih mašinom za tipkanje}\\[0.4cm] % Title of your document
+	
+	\HRule\\[1.5cm]
+	
+	%------------------------------------------------
+	%	Author(s)
+	%------------------------------------------------
+	
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft}
+			\large
+			\text{Student}\\
+			Lovro Magdić
+		\end{flushleft}
+	\end{minipage}
+	~
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushright}
+			\large
+			\text{Nastavnik}\\
+			Juraj Petrović
+		\end{flushright}
+	\end{minipage}
+        \vfill\vfill
+	{\large Siječanj 12, 2023.} % Date, change the \today to a set date if you want to be precise
+	\vfill % Push the date up 1/4 of the remaining page	
+\end{titlepage}
+
+\section{Opis razvijenog proizvoda}
+Cilj ovog projekta bio je razviti sustav za procesiranje dokumenata pisanih mašinom za tipkanje. Sustav korisniku omogućuje lakše vizualno pregledavanje dokumenata, te također lakše računalno iščitavanje teksta na dokumentima. Rad sustava je koncipiran na način da sve što se od korisnika očekuje da valjana putanja gdje se dokumenti nalaze, sve ostalo sustav radi sam, odabir najboljih parametra za svaku sliku pojedinačno, rotacija dokumenata ako je potrebno te stvaranje mapa sa svakim korakom obrade dokumenta.\\
+\\
+Cijeli proces obrade se odvija se kroz naredbeni redak odnosno u razvojnom okruženju po odabiru korisnika. Za razvijanje sustava korišten je Visual Studio Code (VSCode).\\
+\\
+Sustav je razvijen za python3 te zahtjeva razvojnu biblioteku OpenCV. OpenCV je biblioteka programskih funkcija za računalni vid u stvarnom vremenu,  njezine funkcionalnosti koristimo za razne obrade, spremanja i čitanja dokumenata.
+
+\section{Opis rada sustava}
+
+\subsection{Image deskew and Hough line detection}
+
+U navedenom procesu slike prolaze threshold funkciju kako bi dobili sliku sa što manje artefakata te na kojoj bi lakše proveli detekciju linija odnosno „Hough line detection“.\\ \\
+Nakon detekcije linija provodimo računanje globalne zakrivljenosti slike te rotiramo originalnu sliku.
+
+\subsection{Određivanje optimalne vrijednosti threshold funkcije i crtanje kontura}
+
+Zbog razlike u svjetlini fonta na slikama, određivanje globalnog thresholda ne pruža zadovoljavajuće rezultate za sve slike i time je optimalnije bilo omogućiti automatsku detekciju najboljeg thresholda odnosno vrijednosti thresholda.\\ \\
+To smo realizirali tako da koristimo threshold u intervalu (100, 235) i računamo površinu konture koju je detektirao, određujemo razliku maksimalne konture odnosno pravokutnika koji izuzimamo iz slike i površine koju je sustav odredio za trenutni threshold. Optimalni threshold imat će najmanju razliku jer u tom slučaju imamo najprecizniju konturu stvarnom papiru na slici.
+
+\subsection{Izuzimanje optimalne konture}
+
+Nakon što smo odredili optimalnu konturu slike odnosno konturu papira, ta se kontura izrezuje iz slike. Dobiveni rezultat je željeni dokument sa slike bez pozadine i artefakata.
+
+
+\end{document}
