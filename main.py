@@ -8,6 +8,18 @@ from PIL import Image, ImageEnhance
 from pathlib import Path
 from matplotlib import pyplot as plt
 
+def createFolders():
+    os.mkdir("dataset_adaptive")
+    os.mkdir("dataset_blur")
+    os.mkdir("dataset_contour")
+    os.mkdir("dataset_copy")
+    os.mkdir("dataset_deskewed")
+    os.mkdir("dataset_final")
+    os.mkdir("dataset_processed_deskew")
+    os.mkdir("dataset_thick")
+    os.mkdir("dataset_thin")
+    os.mkdir("ocr")
+
 def rotateImage(cvImage, angle: float):
     newImage = cvImage.copy()
     (h, w) = newImage.shape[:2]
@@ -32,6 +44,8 @@ def thick_font(image):
     image = cv2.dilate(image, kernel, iterations=1)
     image = cv2.bitwise_not(image)
     return (image)
+
+createFolders()
 
 home = str(Path.home())
 dir = os.path.join(home, "Desktop", "ProjektR", "dataset")
@@ -177,6 +191,7 @@ for each in arr:
     sharp = cv2.addWeighted(image, alpha, blur, beta, 0.0)
     each = each.replace("dataset_contour", "dataset_blur")
     cv2.imwrite(each, sharp)
+
 '''
 for each in arr:
     each = each.replace("dataset", "dataset_blur")

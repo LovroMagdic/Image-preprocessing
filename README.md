@@ -11,3 +11,13 @@ Python-tesseract is an optical character recognition (OCR) tool for python:
 ```
 pip install pytesseract
 ```
+
+How to use the script:
+
+```
+git clone git@github.com:LovroMagdic/ProjektR.git
+```
+
+After cloning repo place folder containing all images you wish to process and name the folder "dataset".<br />
+<br />
+Script will create all required folders and result of entire processing can be found in "dataset_final" folder.
