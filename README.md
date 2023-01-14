@@ -1,5 +1,3 @@
-# ProjektR
-
 ## This script runs on python3 and need these packages:<br />
 <br />
 
