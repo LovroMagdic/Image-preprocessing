@@ -2,10 +2,7 @@ import cv2
 import pytesseract
 import os
 import numpy as np
-
-from PIL import Image, ImageEnhance
 from pathlib import Path
-from matplotlib import pyplot as plt
 
 #glavni pogram za iscitavanje teksta sa slike
 
