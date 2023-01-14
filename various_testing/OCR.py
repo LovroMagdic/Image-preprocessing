@@ -2,16 +2,13 @@ import cv2
 import pytesseract
 import os
 import numpy as np
-
-from PIL import Image, ImageEnhance
 from pathlib import Path
-from matplotlib import pyplot as plt
 
 #glavni pogram za iscitavanje teksta sa slike
 
-#C:\Users\Lovro\Desktop\projekt\ProjektR\dataset_processed
+#C:\Users\Lovro\Desktop\ProjektR\dataset_processed
 home = str(Path.home())
-dir = os.path.join(home, "Desktop", "projekt", "projektR","dataset_deskewed")  #promjeni zadnji argument ovisno iz kojeg foldera zelis citat slike
+dir = os.path.join(home, "Desktop", "projektR","dataset_final")  #promjeni zadnji argument ovisno iz kojeg foldera zelis citat slike
 dir = dir.replace("\\", "/")
 
 arr = []
@@ -21,7 +18,7 @@ for filename in os.scandir(dir):
         arr.append(filename.path)
         arr_names.append(filename.name)
 i = 0
-os.chdir(r"C:\Users\Lovro\Desktop\projekt\ProjektR\extracted_text_dataset_adaptive") #pozicioniraj se u folder u kojem zelis spremat slike
+os.chdir(r"C:\Users\Lovro\Desktop\ProjektR\ocr") #pozicioniraj se u folder u kojem zelis spremat slike
 
 #iteriranje kroz sve slike foldera
 for each in arr:
