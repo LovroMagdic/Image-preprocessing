@@ -16,6 +16,6 @@ How to use the script:
 git clone git@github.com:LovroMagdic/ProjektR.git
 ```
 
-After cloning repo place folder containing all images you wish to process and name the folder "dataset".<br />
+After cloning repo place folder containing all images you wish to process and name it "dataset".<br />
 <br />
-Script will create all required folders and result of entire processing can be found in "dataset_final" folder.
+Script will create all required folders and result of entire processing can be found in "dataset_final" and extracted text in "ocr" folder.
