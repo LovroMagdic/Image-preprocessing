@@ -109,6 +109,9 @@ for each in arr:
         if res > 0 and res < 10:
             arr2.append(res)
             global_angle += res
+    each = each.replace("dataset_processed_deskew","dataset_draw")
+    cv2.imwrite(each, img)
+    each = each.replace("dataset_draw","dataset_processed_deskew")
     
     global_angle = global_angle/len(arr2) #konacni kut korekcije je prosjek kuteva koje smo uzeli u obzir
     # if "668" in each:
