@@ -43,8 +43,8 @@ def thick_font(image):
     return (image)
 
 createFolders()
-home = str(Path.home())
-dir = os.path.join(home, "Desktop", "ProjektR", "dataset")
+dir = os.getcwd()
+dir = os.path.join(dir,"dataset")
 dir = dir.replace("\\", "/")
 arr = [] # sadrzi imena svih dataset slika
 
@@ -230,8 +230,8 @@ for each in arr:
 #glavni pogram za iscitavanje teksta sa slike
 
 #C:\Users\Lovro\Desktop\ProjektR\dataset_processed
-home = str(Path.home())
-dir = os.path.join(home, "Desktop", "projektR","dataset_final")  #promjeni zadnji argument ovisno iz kojeg foldera zelis citat slike
+dir = os.getcwd()
+dir = os.path.join(dir,"dataset_final")
 dir = dir.replace("\\", "/")
 
 arr = []
@@ -241,7 +241,11 @@ for filename in os.scandir(dir):
         arr.append(filename.path)
         arr_names.append(filename.name)
 i = 0
-os.chdir(r"C:\Users\Lovro\Desktop\ProjektR\ocr") #pozicioniraj se u folder u kojem zelis spremat slike
+
+dir = os.getcwd()
+dir = os.path.join(dir,"ocr")
+dir = dir.replace("\\", "/")
+os.chdir(dir) #pozicioniraj se u folder u kojem zelis spremat slike
 
 #iteriranje kroz sve slike foldera
 for each in arr:
