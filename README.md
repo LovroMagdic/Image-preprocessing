@@ -1,4 +1,4 @@
-## This script runs on python3 and need these packages:<br />
+## This script runs on python3 and requires these packages:<br />
 <br />
 
 openCV for image processing and various reads and writes:
