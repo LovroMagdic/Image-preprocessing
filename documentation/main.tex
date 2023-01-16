@@ -8,6 +8,7 @@
 \usepackage[T1]{fontenc} % Output font encoding for international characters
 \usepackage{listings}
 \usepackage{color}
+\hypersetup{hidelinks}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -202,4 +203,15 @@ pip install pytesseract
 Nakon kloniranja repozitorija korisnik postavlja slike nad kojima želi provesti procesiranje u mapu "dataset" te pokreće "image\_preprocessing.py". Sustav automatski kreira preostale mape, rezultat obrade nalazi se u mapi "dataset\_final" odnosno isčitani podatci u "ocr". 
 \newpage
 \section{Literatura}
+\begin{enumerate}
+    \item \href{https://docs.opencv.org/4.x}{OpenCV}
+    \item \href{https://github.com/wjbmattingly/ocr_python_textbook/blob/main/02_02_working%20with%20opencv.ipynb}{Preprocessing Images for OCR, wjbmattingly}
+    \item \href{ https://learnopencv.com/hough-transform-with-opencv-c-python/}{Hough Transform with OpenCV, Krutika Bapat}
+    \item \href{https://www.geeksforgeeks.org/line-detection-python-opencv-houghline-method/}{Line detection in python with OpenCV Houghline method, GeeksforGeeks}
+    \item \href{https://opencv24-python-tutorials.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html}{Morphological Transformations, OpenCV-Python Tutorials}
+    \item \href{https://medium.com/@9sphere/machine-vision-recipes-deskewing-document-images-e17827894c34}{Machine Vision Recipes: Deskewing document images, 9Sphere}
+    \item \href{https://docs.opencv.org/2.4/modules/imgproc/doc/structural_analysis_and_shape_descriptors.html#findcontours}{Structural Analysis and Shape Descriptors, OpenCV documentation}
+    \item \href{https://learnopencv.com/contour-detection-using-opencv-python-c/#Drawing-Contours-using-CHAIN_APPROX_SIMPLE}{Contour Detection using OpenCV, LearnOpenCV}
+    
+\end{enumerate}
 \end{document}
