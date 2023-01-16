@@ -73,29 +73,29 @@
 \end{titlepage}
 
 \section{Opis razvijenog proizvoda}
-Cilj ovog projekta bio je razviti sustav za procesiranje dokumenata pisanih mašinom za tipkanje. Sustav korisniku omogućuje lakše vizualno pregledavanje dokumenata, te također lakše računalno iščitavanje teksta na dokumentima. Rad sustava je koncipiran na način da sve što se od korisnika očekuje da valjana putanja gdje se dokumenti nalaze, sve ostalo sustav radi sam, odabir najboljih parametra za svaku sliku pojedinačno, rotacija dokumenata ako je potrebno te stvaranje mapa sa svakim korakom obrade dokumenta.\\
+Cilj ovog projekta bio je razviti sustav za procesiranje dokumenata pisanih pisaćom mašinom. Sustav korisniku omogućuje lakše vizualno pregledavanje dokumenata, te računalno iščitavanje s dokumenata. Od korisnika očekuje se datoteka sa slikama nad kojima treba provesti procesiranje, sve ostalo sustav radi automatski. Odabir najboljih parametra, spremanje međurezultata, rotacija i slično.\\
 \\
 Cijeli proces obrade se odvija se kroz naredbeni redak odnosno u razvojnom okruženju po odabiru korisnika. Za razvijanje sustava korišten je Visual Studio Code (VSCode).\\
 \\
-Sustav je razvijen za python3 te zahtjeva razvojnu biblioteku openCV. OpenCV je biblioteka programskih funkcija za računalni vid u stvarnom vremenu,  njezine funkcionalnosti koristimo za razne obrade, spremanja i čitanja dokumenata.
+Sustav je razvijen za python3 te zahtjeva razvojnu biblioteku openCV. OpenCV je biblioteka razvojnih funkcija za računalni vid u stvarnom vremenu,  njezine funkcionalnosti koristimo za razne obrade, spremanja i čitanja dokumenata.
 
 \section{Opis rada sustava}
 
 \subsection{Binary threshold i Image deskew}
 
 U navedenom koraku koristimo navedene funkcije obrade: Binary threshold i Image deskew.\\
-Threshold je segmentacijska funckija pomoću koje postižemo crno-bijelu sliku iz "grayscale" formata ili slike u boji.Preciznije za inicjalni threshold koristimo varijantu "Binary Threshold". Kao parametre prima granicu do koje nijanse sive postaju crne i iznad navedene granice nijanse sive postaju bijele. %ovdje umentni sliku Binary Threshold
+Threshold je segmentacijska funckija pomoću koje postižemo crno-bijelu sliku iz "grayscale" formata ili slike u boji. Preciznije za inicijalni threshold koristimo "Binary Threshold". Kao parametre prima granicu do koje nijanse sive postaju crne i iznad navedene granice nijanse sive postaju bijele. %ovdje umentni sliku Binary Threshold
 \\
 \begin{center}
     \includegraphics{binary_threshold.jpg}
 \end{center}
-\newline
+
 Binary threshold nam omogućuje uklanjanje raznih artefakata koji bi otežali proces "Hough Line Transform".\\
 
-Hough Line Transform je jednostvani transformacijski proces pomoću kojeg pronalazimo ravne linije na slici, u našem slučaju rubove papira na slici koja je prošla threshold. Nakon detekcije linija, računamo njihovu orijentaciju s obziorm na os apscise i time dobivamo kut zakrivljenosti. Navedeni kut odnosno kutevi nam olakšavaju postizanje uspravnosti papira na slici.\\
+Hough Line Transform je jednostvani transformacijski proces pomoću kojeg pronalazimo ravne linije na slici, u našem slučaju rubove papira na slici koja je prošla threshold. Nakon detekcije linija, računamo njihovu orijentaciju s obzirom na os apscise i time dobivamo kut zakrivljenosti. Navedeni kut odnosno kutevi nam olakšavaju postizanje uspravnosti papira na slici.\\
 
 %ovdje stavi primjer sa neke slike di su nacrtane linije
-Određenim kutem zakrivljenosti ostaje nam samo rotacija slike. Za to koristimo definiranu funckiju "rotateImage" koja obavlja rotaciju slike pomoću integrirane fuckije "warpAffine" iz biblioteke openCV, koja rotira sliku s obzirom na centar slike. %tu ubaci sliku koda rotateImage \\
+Nakon određenog kuta zakrivljenosti preostaje nam rotacija slike. Za to koristimo definiranu funckiju "rotateImage" koja obavlja rotaciju pomoću integrirane funkcije "warpAffine" iz razvojne biblioteke openCV, slika se rotira oko svoga centra. %tu ubaci sliku koda rotateImage \\
 \begin{lstlisting}
 def rotateImage(cvImage, angle: float):
     newImage = cvImage.copy()
@@ -115,10 +115,10 @@ Rotacija se ne provodi na slici koja je prošla threshold već na originalnoj sl
 %ubaci originalnu pored rotirane
 
 \subsection{Contour detection}
-Sljedeći korak u procesu obrađivanja slika je "contour detection". Izuzetno je bitan za kasniju primjenu "adaptive threshold" i za izuzimanje nepotrebnih informacija iz slike (crne pozadine i artefakata). Radi na jednostavnom principu označavanja kontinuiranih točaka te lokaliziranje istih u skupinu odnosno konturu.\\ \\
+Sljedeći korak u procesu obrađivanja slika je "contour detection". Bitan je za primjenu "adaptive threshold" funkcije i izuzimanje nepotrebnih artefakata iz slike (crne pozadine i artefakata). Radi na jednostavnom principu označavanja kontinuiranih točaka te lokaliziranje istih u skupinu odnosno konturu.\\ \\
 Detekciju kontura provodimo na threshold slici a konture primjenjujemo na originalnoj odnosno rotiranom originalu.\\ %ubaci sliku sa konturom na originalu
 \\
-Kako bi postigli optimalnu konturu za svaku sliku provodimo detekciju optimalnog parametra threshold funckije za savaku sliku zasebno.
+Kako bi postigli optimalnu konturu za svaku sliku provodimo detekciju optimalnog parametra threshold funkcije za svaku sliku.
 Koristimo threshold u intervalu (100, 235) i računamo površinu konture koju je detektirao, određujemo razliku maksimalne konture i površine koju je sustav odredio za trenutni threshold. Optimalni threshold imat će najmanju razliku jer u tom slučaju imamo najprecizniju konturu stvarnom papiru na slici.
 \newline
 \begin{center}
@@ -154,8 +154,8 @@ Primjenom Gaussove funkcije u procesu zamućivanja slike smanjujemo detalje i š
 \end{center}
 
 \subsection{Adaptive threshold}
-
-Razina svjetlosti varira između slika čak i na jednoj slici možemo uočiti više razina svjetlosti to nam otežava određivanje optimalnog parametra thresholda. \\ Kako bi rješili taj problem koristimo funkciju "adaptive threshold" koja izračunava threshold parametar za piksele s obzirom na susjedne piksele. Time dobivamo različite vrijednosti thresholda za područja različitog osvjetljenja.
+Slike mogu sadržavati više razina različitog osvjetljenja i to
+nam otežava određivanje optimalnog parametra thresholda. \\ Kako bi rješili taj problem koristimo funkciju "adaptive threshold" koja izračunava threshold parametar za piksele s obzirom na susjedne piksele. Time dobivamo različite vrijednosti thresholda za područja različitog osvjetljenja.
 \newline
 \begin{center}
     \includegraphics[scale=0.2]{Z05353721-cont.jpg}
@@ -170,7 +170,7 @@ image = cv2.adaptiveThreshold(img, 255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRES
 
 \subsection{Font thinning}
 
-Kako bi olkšali optičko prepoznavanje znakova primjenjujemo proces stanjivanja fonta kojim također izbacujemo nepotreban šum oko znakova i postižemo detaljniju sliku. %ubaci primje stanjivanja i kod
+Kako bi olakšali optičko prepoznavanje znakova primjenjujemo proces stanjivanja fonta kojim također izbacujemo nepotreban šum oko znakova i postižemo detaljniju sliku. %ubaci primje stanjivanja i kod
 \\
 
 \begin{lstlisting}
@@ -199,7 +199,7 @@ pip install opencv-python
 pip install pytesseract
 \end{lstlisting}
 \\
-Nakon kloniranja repozitorija korisnik postavlja slike nad kojima želi provesti procesiranje u mapu "dataset" te pokreće "image\_preprocessing.py". Sustav sam kreira preostale mape, rezultat obrade nalazi se u mapi "dataset\_final" odnosno isčitani podatci u "ocr". 
+Nakon kloniranja repozitorija korisnik postavlja slike nad kojima želi provesti procesiranje u mapu "dataset" te pokreće "image\_preprocessing.py". Sustav automatski kreira preostale mape, rezultat obrade nalazi se u mapi "dataset\_final" odnosno isčitani podatci u "ocr". 
 \newpage
 \section{Literatura}
 \end{document}
