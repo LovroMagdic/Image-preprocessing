@@ -13,7 +13,7 @@ pip install pytesseract
 How to use the script:
 
 ```
-git clone git@github.com:LovroMagdic/ProjektR.git
+git@github.com:LovroMagdic/Image-preprocessing.git
 ```
 
 After cloning repo place folder containing all images you wish to process and name it "dataset".<br />
