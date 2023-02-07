@@ -5,6 +5,7 @@ import numpy as np
 import math
 from pathlib import Path
 
+# creating folder to store results for each step of preprocessing
 def createFolders():
     os.mkdir("dataset_adaptive")
     os.mkdir("dataset_blur")
@@ -17,6 +18,7 @@ def createFolders():
     os.mkdir("dataset_thin")
     os.mkdir("ocr")
 
+#function used for rotating image considering image center
 def rotateImage(cvImage, angle: float):
     newImage = cvImage.copy()
     (h, w) = newImage.shape[:2]
@@ -25,9 +27,11 @@ def rotateImage(cvImage, angle: float):
     newImage = cv2.warpAffine(newImage, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
     return newImage
 
+#function for grayscaling image
 def grayscale(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
+#function used for thinning font by using multiple cv2 builtin functions
 def thin_font(image):
     image = cv2.bitwise_not(image)
     kernel = np.ones((2,1),np.uint8)
@@ -35,6 +39,7 @@ def thin_font(image):
     image = cv2.bitwise_not(image)
     return (image)
 
+#function used for creating thicker font by using multiple cv2 builtin functions
 def thick_font(image):
     image = cv2.bitwise_not(image)
     kernel = np.ones((2,2),np.uint8)
@@ -42,17 +47,21 @@ def thick_font(image):
     image = cv2.bitwise_not(image)
     return (image)
 
+
+#here starts main script
 createFolders()
 dir = os.getcwd()
 dir = os.path.join(dir,"dataset")
 dir = dir.replace("\\", "/")
 arr = [] # sadrzi imena svih dataset slika
 
+#we are saving each file stored in dataset in arr array so that is easier to iterate after
 for filename in os.scandir(dir):
     if filename.is_file():
         arr.append(filename.path)
 
-#spremljene slike za pronalazenje linija
+#every each in for loop represents an iterated image in folder
+#saving images to use them for houghline transform, line detection
 for each in arr:
     tmp_img = cv2.imread(each)
 
@@ -61,15 +70,15 @@ for each in arr:
     each = each.replace("dataset", "dataset_processed_deskew")
     cv2.imwrite(each, im_bw)
 
-#spremanje slika za rotiranje i traznje linija
+#saving images on which rotation will actually take place
 for each in arr:
 
     image = cv2.imread(each, 0)
     each = each.replace("dataset","dataset_copy")
     cv2.imwrite(each, image)
 
-#pronalaznje linija i rotiranje
-#real_img ona koja ustvari rotiram, img je slika za pronalaznje linija
+#line detection and rotation script
+#real_img is an image which is actually being rotated and image is dummy image which we use for line detection and deskew angle
 for each in arr:
     arr1 = []
     each = each.replace("dataset", "dataset_copy")
@@ -83,6 +92,7 @@ for each in arr:
     edges = cv2.Canny(gray, 50, 150, apertureSize=3)
     lines = cv2.HoughLines(edges, 1, np.pi/180, 200)
 
+    #caluclating angles found on image, since we found alot of angles and some of them arent useful we discard some afterwards
     for r_theta in lines:
         arr1 = np.array(r_theta[0], dtype=np.float64)
         r, theta = arr1
@@ -105,28 +115,29 @@ for each in arr:
         angle = math.tan(abs((k2-0)/(1+k2*0)))
         res = math.degrees(math.atan(angle))
         
-        #uzimanje samo kuteva izmedu 0-10 stup, izbacujemo prevelike kuteve
+        #we consider only angles between 0-10, by doing that we get better results on whole dataset
         if res > 0 and res < 10:
             arr2.append(res)
             global_angle += res
+
     each = each.replace("dataset_processed_deskew","dataset_draw")
     cv2.imwrite(each, img)
     each = each.replace("dataset_draw","dataset_processed_deskew")
     
-    global_angle = global_angle/len(arr2) #konacni kut korekcije je prosjek kuteva koje smo uzeli u obzir
-    # if "668" in each:
-    #     cv2.imwrite('test-668.jpg', img)
-    #     print(arr2)
-
+    #global_angle is final calculated angle for which particular image in question is deskewed
+    global_angle = global_angle/len(arr2)
+    
+    #calling rotating function with param (actual image rotated, angle of rotation)
     deskew_img = rotateImage(real_img, -1 * global_angle)
 
     each=each.replace("dataset_processed_deskew", "dataset_deskewed")
     cv2.imwrite(each, deskew_img)
 
-# pronalazenje najboljeg thresholda
+# calculating threshold for which we get best results
 ar = []
 array = []
 
+#iterating through threshold value of 100 - 235 and calculating minimal remainder like that we get most optimal threshold which gives us best contour
 for each in arr:
     each = each.replace("dataset","dataset_deskewed")
     for i in range(100, 235, 5): # i == best_thresh
@@ -169,6 +180,7 @@ for each in arr:
     each = each.replace("dataset_deskewed", "dataset_filled")
     cv2.imwrite(each, black_canvas)
 
+    #creating bounding rectangle with whome we cut out the detected countour
     c = max(contours, key = cv2.contourArea)
     x,y,w,h = cv2.boundingRect(c)
     cv2.rectangle(thresh,(x,y),(x+w,y+h),(0,255,0),5)
@@ -176,6 +188,7 @@ for each in arr:
     each = each.replace("dataset_filled", "dataset_contour")
     cv2.imwrite(each, foreground)
 
+#we use gaussian blur since it gets rid of artifacts around letters and helps to smooth them out
 for each in arr:
     each = each.replace("dataset", "dataset_contour")
     image = cv2.imread(each, 0)
@@ -187,6 +200,7 @@ for each in arr:
     each = each.replace("dataset_contour", "dataset_blur")
     cv2.imwrite(each, sharp)
 
+# this part is commented out since it didnt prove as good option for achieving better OCR results
 '''
 for each in arr:
     each = each.replace("dataset", "dataset_blur")
@@ -196,7 +210,7 @@ for each in arr:
     each = each.replace("dataset_blur","dataset_thick")
     cv2.imwrite(each, dilated_image)
 '''
-
+# using adaptive threshold for getting best results for images with uneven lighting on whole document
 for each in arr:
     each = each.replace("dataset","dataset_blur")
     img = cv2.imread(each, 0)
@@ -205,8 +219,8 @@ for each in arr:
     each = each.replace("dataset_blur","dataset_adaptive")
     cv2.imwrite(each, image)
 
+# font thinning achieved with "thin_font" function, used for improving readability of document for both human and ocr
 for each in arr:
-
     # thinner font
     each = each.replace("dataset","dataset_adaptive")
     image = cv2.imread(each)
@@ -227,9 +241,6 @@ for each in arr:
 
 
 #here starts OCR script
-#glavni pogram za iscitavanje teksta sa slike
-
-#C:\Users\Lovro\Desktop\ProjektR\dataset_processed
 dir = os.getcwd()
 dir = os.path.join(dir,"dataset_final")
 dir = dir.replace("\\", "/")
@@ -245,9 +256,9 @@ i = 0
 dir = os.getcwd()
 dir = os.path.join(dir,"ocr")
 dir = dir.replace("\\", "/")
-os.chdir(dir) #pozicioniraj se u folder u kojem zelis spremat slike
+os.chdir(dir) #postion in folder where you want to save images
 
-#iteriranje kroz sve slike foldera
+#script for iterating through images and saving results in .txt file
 for each in arr:
     file_name = os.path.join(os.path.dirname(__file__), each)
     assert os.path.exists(file_name)
