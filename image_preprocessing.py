@@ -109,6 +109,8 @@ for each in arr:
         if ((x2-x1) != 0):
             res1 = (y2-y1)/(x2-x1)
             res2 = y1-res1*x1
+        else:
+            res1 = 0
         cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
         
         k2 = res1
@@ -239,7 +241,6 @@ for each in arr:
     each = each.replace("dataset_thin", "dataset_final")
     cv2.imwrite(each, blur)
 
-
 #here starts OCR script
 dir = os.getcwd()
 dir = os.path.join(dir,"dataset_final")
@@ -264,7 +265,7 @@ for each in arr:
     assert os.path.exists(file_name)
     img = cv2.imread(file_name, -1)
     custom_config = r'--oem 3 --psm 6'
-    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/Cellar/tesseract/5.3.0_1/bin/tesseract'
     string = pytesseract.image_to_string(img, config=custom_config)
 
     #odrediste procitanog teksta, ime_slike.txt
@@ -273,3 +274,6 @@ for each in arr:
     i += 1
     text_file.write(string)
     text_file.close()
+
+    #r'/opt/homebrew/Cellar/tesseract/5.3.0_1/bin/tesseract' mac
+    #r'C:\Program Files\Tesseract-OCR\tesseract.exe' win

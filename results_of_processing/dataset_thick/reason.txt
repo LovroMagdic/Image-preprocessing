@@ -1,1 +1,0 @@
-This folder is empty since line of code which should thicken the font is commented out of script.
