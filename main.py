@@ -21,11 +21,11 @@ for each in arr:
     image = cv2.imread(each)
 
     # Read the desired model
-    path = r'/Users/lovro/Desktop/test/FSRCNN_Tensorflow-master/models/FSRCNN_x4.pb'
+    path = r'/Users/lovro/Desktop/image-preprocessing - testing branch/FSRCNN_Tensorflow-master/models/FSRCNN_x3.pb'
     sr.readModel(path)
 
     # Set the desired model and scale to get correct pre- and post-processing
-    sr.setModel("fsrcnn", 4)
+    sr.setModel("fsrcnn", 3)
 
     # Upscale the image
     result = sr.upsample(image)
