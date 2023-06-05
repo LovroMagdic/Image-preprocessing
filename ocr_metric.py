@@ -2,7 +2,9 @@ import os
 import sys 
 
 stdoutOrigin=sys.stdout 
-sys.stdout = open("log.txt", "w")
+sys.stdout = open("output.csv", "w")
+
+print("image,correct,found,CER") # this is header for .csv file
 
 def findSimilar(word):
     max_word = []
@@ -111,8 +113,19 @@ for e in arr:
 
             end_result.append([word, output[0]])
     
+    if len(end_result) == 0:
+        found_words = 0
+        end_result.append("spasi sve")
+        final_res = 100
+    else:
+        found_words = len(end_result)
+        final_res = float(sum/len(end_result))
     correct_form = e.split("/")
     ocr_form = j.split("/")
-    print("Out of correct words > ", len(correct), "OCR extracted > ", len(end_result))
-    print("Final CER for", correct_form[-1], ocr_form[-1], "> ", float(sum/len(end_result)))
-    print("==========================================")
+    #print("Out of correct words > ", len(correct), "OCR extracted > ", found_words)
+    print(correct_form[-1], len(correct), found_words, final_res, sep=",")
+    #print("Final CER for", correct_form[-1], ocr_form[-1], "> ", final_res)
+    #print("==========================================")
+
+
+    

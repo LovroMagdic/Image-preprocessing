@@ -10,7 +10,7 @@ import os
 from cv2 import dnn_superres
 
 dir = os.getcwd()
-dir = os.path.join(dir,"crop")
+dir = os.path.join(dir,"dataset")
 dir = dir.replace("\\", "/")
 
 arr = []
@@ -22,7 +22,7 @@ for filename in os.scandir(dir):
 i = 0
 
 dir = os.getcwd()
-dir = os.path.join(dir,"crop_ocr")
+dir = os.path.join(dir,"dataset_original_ocr")
 dir = dir.replace("\\", "/")
 os.chdir(dir) #postion in folder where you want to save images
 
@@ -31,7 +31,7 @@ for each in arr:
     file_name = os.path.join(os.path.dirname(__file__), each)
     assert os.path.exists(file_name)
     img = cv2.imread(file_name, -1)
-    custom_config = r'--oem 3 --psm 6'
+    custom_config = r'--oem 1 srp_latn+hrv --psm 6'
     pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/Cellar/tesseract/5.3.0_1/bin/tesseract'
     string = pytesseract.image_to_string(img, config=custom_config)
 
