@@ -4,7 +4,6 @@ import os
 import numpy as np
 import math
 from pathlib import Path
-from cv2 import dnn_superres
 
 # creating folder to store results for each step of preprocessing
 def createFolders():
@@ -17,7 +16,6 @@ def createFolders():
     os.mkdir("dataset_processed_deskew")
     os.mkdir("dataset_thick")
     os.mkdir("dataset_thin")
-    os.mkdir("dataset_denoise")
     os.mkdir("ocr")
 
 #function used for rotating image considering image center
@@ -48,6 +46,7 @@ def thick_font(image):
     image = cv2.dilate(image, kernel, iterations=1)
     image = cv2.bitwise_not(image)
     return (image)
+
 
 #here starts main script
 dir = os.getcwd()
@@ -195,80 +194,56 @@ for each in arr:
     each = each.replace("dataset_filled", "dataset_contour")
     cv2.imwrite(each, foreground)
 
-# Create an SR object
-sr = dnn_superres.DnnSuperResImpl_create()
-#upscale
+#we use gaussian blur since it gets rid of artifacts around letters and helps to smooth them out
 for each in arr:
     each = each.replace("dataset", "dataset_contour")
-    # Read image
+    image = cv2.imread(each, 0)
+
+    blur = cv2.GaussianBlur(image,(5,5),0)
+    alpha = 1.5
+    beta = (1.0 - alpha)
+    sharp = cv2.addWeighted(image, alpha, blur, beta, 0.0)
+    each = each.replace("dataset_contour", "dataset_blur")
+    cv2.imwrite(each, sharp)
+
+# this part is commented out since it didnt prove as good option for achieving better OCR results
+
+for each in arr:
+    each = each.replace("dataset", "dataset_blur")
+    # thicker font
     image = cv2.imread(each)
-
-    # Read the desired model
-    path = r'/Users/lovro/Desktop/image-preprocessing - testing branch/FSRCNN_Tensorflow-master/models/FSRCNN_x4.pb'
-    sr.readModel(path)
-
-    # Set the desired model and scale to get correct pre- and post-processing
-    sr.setModel("fsrcnn", 4)
-
-    # Upscale the image
-    result = sr.upsample(image)
-
-    # Save the image
-    each = each.replace("dataset_contour", "dataset_upscaled")
-    cv2.imwrite(each, result)
-
+    dilated_image = thick_font(image)
+    each = each.replace("dataset_blur","dataset_thick")
+    cv2.imwrite(each, dilated_image)
 
 # using adaptive threshold for getting best results for images with uneven lighting on whole document
 for each in arr:
-    each = each.replace("dataset","dataset_upscaled")
+    each = each.replace("dataset","dataset_thick")
     img = cv2.imread(each, 0)
 
     image = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,121,4)
-    each = each.replace("dataset_upscaled","dataset_adaptive")
+    each = each.replace("dataset_thick","dataset_adaptive")
     cv2.imwrite(each, image)
-
-#denoise
-for each in arr:
-    each = each.replace("dataset", "dataset_adaptive")
-    img = cv2.imread(each,0)
-    ret, bw = cv2.threshold(img, 128,255,cv2.THRESH_BINARY_INV)
-
-    connectivity = 4
-    nb_components, output, stats, centroids = cv2.connectedComponentsWithStats(bw, connectivity, cv2.CV_32S)
-    sizes = stats[1:, -1]; nb_components = nb_components - 1
-    min_size = 20 #threshhold value for small noisy components
-    img2 = np.zeros((output.shape), np.uint8)
-
-    for i in range(0, nb_components):
-        if sizes[i] >= min_size:
-            img2[output == i + 1] = 255
-
-    res = cv2.bitwise_not(img2)
-    each = each.replace("dataset_adaptive", "dataset_denoise")
-    cv2.imwrite(each, res)
-
 
 # font thinning achieved with "thin_font" function, used for improving readability of document for both human and ocr
 for each in arr:
     # thinner font
-    each = each.replace("dataset","dataset_denoise")
+    each = each.replace("dataset","dataset_adaptive")
     image = cv2.imread(each)
     eroded_image = thin_font(image)
-    each = each.replace("dataset_denoise", "dataset_thin")
+    each = each.replace("dataset_adaptive", "dataset_thin")
     cv2.imwrite(each, eroded_image)
 
-#blur
 for each in arr:
     each = each.replace("dataset", "dataset_thin")
-    img = cv2.imread(each, 0)
-    blur = cv2.blur(img,(5,5))
+    image = cv2.imread(each, 0)
 
+    blur = cv2.GaussianBlur(image,(5,5),0)
+    alpha = 1.5
+    beta = (1.0 - alpha)
+    # sharp = cv2.addWeighted(image, alpha, blur, beta, 0.0)
     each = each.replace("dataset_thin", "dataset_final")
     cv2.imwrite(each, blur)
-
-
-
-
 
 #here starts OCR script
 dir = os.getcwd()
@@ -296,7 +271,6 @@ for each in arr:
     custom_config = r'--oem 1 srp_latn+hrv --psm 6'
     pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/Cellar/tesseract/5.3.0_1/bin/tesseract'
     string = pytesseract.image_to_string(img, config=custom_config)
-    string = string.lower()
 
     #odrediste procitanog teksta, ime_slike.txt
     txt_name = str(arr_names[i].replace(".jpg", "")) + ".txt"

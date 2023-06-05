@@ -10,7 +10,7 @@ import os
 from cv2 import dnn_superres
 
 dir = os.getcwd()
-dir = os.path.join(dir,"dataset_denoise")
+dir = os.path.join(dir,"crop")
 dir = dir.replace("\\", "/")
 
 arr = []
@@ -22,7 +22,7 @@ for filename in os.scandir(dir):
 i = 0
 
 dir = os.getcwd()
-dir = os.path.join(dir,"ocr")
+dir = os.path.join(dir,"crop_ocr")
 dir = dir.replace("\\", "/")
 os.chdir(dir) #postion in folder where you want to save images
 

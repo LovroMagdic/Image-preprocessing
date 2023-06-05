@@ -1,0 +1,30 @@
+Out of correct words >  20 OCR extracted >  6
+Final CER for Z05353721.txt Z05353721.txt >  0.07878787878787878
+==========================================
+Out of correct words >  279 OCR extracted >  149
+Final CER for Z05353668.txt Z05353668.txt >  0.4166957483232652
+==========================================
+Out of correct words >  212 OCR extracted >  146
+Final CER for Z05353422.txt Z05353422.txt >  0.2285443627909381
+==========================================
+Out of correct words >  157 OCR extracted >  103
+Final CER for Z05353778.txt Z05353778.txt >  0.3828690996166725
+==========================================
+Out of correct words >  165 OCR extracted >  120
+Final CER for Z05353396.txt Z05353396.txt >  0.3121266233766233
+==========================================
+Out of correct words >  269 OCR extracted >  167
+Final CER for Z05353424.txt Z05353424.txt >  0.29004829169499846
+==========================================
+Out of correct words >  169 OCR extracted >  107
+Final CER for Z05353401.txt Z05353401.txt >  0.4160961053484418
+==========================================
+Out of correct words >  127 OCR extracted >  81
+Final CER for Z05353836.txt Z05353836.txt >  0.3686907571166831
+==========================================
+Out of correct words >  116 OCR extracted >  80
+Final CER for Z05353758.txt Z05353758.txt >  0.22506781413031404
+==========================================
+Out of correct words >  121 OCR extracted >  71
+Final CER for Z05353673.txt Z05353673.txt >  0.37552029347804
+==========================================

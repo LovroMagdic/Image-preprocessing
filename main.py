@@ -5,7 +5,7 @@ from cv2 import dnn_superres
 
 
 dir = os.getcwd()
-dir = os.path.join(dir,"dataset")
+dir = os.path.join(dir,"crop")
 dir = dir.replace("\\", "/")
 arr = [] # sadrzi imena svih dataset slika
 
@@ -31,5 +31,5 @@ for each in arr:
     result = sr.upsample(image)
 
     # Save the image
-    each = each.replace("dataset", "dataset_upscaled")
+    each = each.replace("crop", "crop")
     cv2.imwrite(each, result)

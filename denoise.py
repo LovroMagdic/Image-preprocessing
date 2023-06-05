@@ -23,7 +23,7 @@ for each in arr:
     connectivity = 4
     nb_components, output, stats, centroids = cv2.connectedComponentsWithStats(bw, connectivity, cv2.CV_32S)
     sizes = stats[1:, -1]; nb_components = nb_components - 1
-    min_size = 50 #threshhold value for small noisy components
+    min_size = 1 #threshhold value for small noisy components
     img2 = np.zeros((output.shape), np.uint8)
 
     for i in range(0, nb_components):
